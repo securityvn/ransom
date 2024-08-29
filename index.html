@@ -14,11 +14,11 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="mb-4">Ransomware Damage Calculator</h2>
+    <h2 class="mb-4">Tính toán thiệt hại do Ransomware gây ra cho doanh nghiệp</h2>
     <form id="damageForm">
         <div class="mb-3">
             <label for="companyName" class="form-label">Công ty</label>
-            <input type="text" class="form-control" id="companyName" placeholder="Nhập tên công ty" value="ABC">
+            <input type="text" class="form-control" id="companyName" placeholder="Nhập tên công ty" value="">
         </div>
         <div class="mb-3">
             <label for="employeeCount" class="form-label">Số lượng nhân viên</label>
@@ -26,12 +26,11 @@
         </div>
         <div class="mb-3">
             <label for="annualRevenue" class="form-label">Doanh thu hàng năm (tỷ VNĐ)</label>
-            <input type="number" class="form-control" id="annualRevenue" placeholder="Nhập doanh thu hàng năm" value="30">
+            <input type="number" class="form-control" id="annualRevenue" placeholder="Nhập doanh thu hàng năm" value="10">
         </div>
         <div class="mb-3">
-            <label for="securityInvestment" class="form-label">Mức độ đầu tư an ninh mạng</label>
             <select class="form-select" id="securityInvestment">
-                <option value="0">Không đầu tư</option>
+                <option value="0">Chưa đầu tư</option>
                 <option value="0.1">Đầu tư win bản quyền, antivirus</option>
                 <option value="0.3">Đầu tư firewall, nhân viên IT</option>
                 <option value="0.5">Đầu tư hệ thống SOC, Pentest</option>
