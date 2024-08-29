@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ransomware Damage Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Ransomware Damage Calculator</h2>
+    <form id="damageForm">
+        <div class="mb-3">
+            <label for="companyName" class="form-label">Công ty</label>
+            <input type="text" class="form-control" id="companyName" placeholder="Nhập tên công ty" value="ABC">
+        </div>
+        <div class="mb-3">
+            <label for="employeeCount" class="form-label">Số lượng nhân viên</label>
+            <input type="number" class="form-control" id="employeeCount" placeholder="Nhập số lượng nhân viên" value="50">
+        </div>
+        <div class="mb-3">
+            <label for="annualRevenue" class="form-label">Doanh thu hàng năm (tỷ VNĐ)</label>
+            <input type="number" class="form-control" id="annualRevenue" placeholder="Nhập doanh thu hàng năm" value="30">
+        </div>
+        <div class="mb-3">
+            <label for="securityInvestment" class="form-label">Mức độ đầu tư an ninh mạng</label>
+            <select class="form-select" id="securityInvestment">
+                <option value="0">Không đầu tư</option>
+                <option value="0.1">Thấp (giảm 10%)</option>
+                <option value="0.3">Trung bình (giảm 30%)</option>
+                <option value="0.5">Cao (giảm 50%)</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="calculateDamageCosts()">Tính toán chi phí thiệt hại</button>
+    </form>
+
+    <div class="mt-4" id="resultsTable" style="display: none;">
+        <h4>Bảng so sánh chi phí thiệt hại</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Loại chi phí</th>
+                    <th>Không đầu tư an ninh mạng (VNĐ)</th>
+                    <th>Có đầu tư an ninh mạng (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Chi phí ứng phó sự cố</td>
+                    <td><span id="incidentResponseCost">0</span></td>
+                    <td><span id="incidentResponseCostInvested">0</span></td>
+                </tr>
+                <tr>
+                    <td>Chi phí khôi phục dữ liệu</td>
+                    <td><span id="dataRecoveryCost">0</span></td>
+                    <td><span id="dataRecoveryCostInvested">0</span></td>
+                </tr>
+                <tr>
+                    <td>Chi phí ngừng hoạt động</td>
+                    <td><span id="downtimeCost">0</span></td>
+                    <td><span id="downtimeCostInvested">0</span></td>
+                </tr>
+                <tr>
+                    <td>Thiệt hại uy tín</td>
+                    <td><span id="reputationDamageCost">0</span></td>
+                    <td><span id="reputationDamageCostInvested">0</span></td>
+                </tr>
+                <tr>
+                    <td>Lợi nhuận bị ảnh hưởng</td>
+                    <td><span id="profitLossCost">0</span></td>
+                    <td><span id="profitLossCostInvested">0</span></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Tổng thiệt hại</th>
+                    <th><span id="totalDamageCost">0</span></th>
+                    <th><span id="totalDamageCostInvested">0</span></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script>
+function calculateDamageCosts() {
+    const employeeCount = parseFloat($('#employeeCount').val()) || 0;
+    const annualRevenue = parseFloat($('#annualRevenue').val()) || 0;
+    const investmentLevel = parseFloat($('#securityInvestment').val());
+
+    // Chuyển đổi doanh thu hàng năm từ tỷ VNĐ sang VNĐ
+    const annualRevenueVND = annualRevenue * 1e9;
+
+    // Tính toán các chi phí không đầu tư
+    const incidentResponseCost = (employeeCount * 0.02 * 1e6) + (annualRevenueVND * 0.001);
+    const dataRecoveryCost = annualRevenueVND * 0.01;
+    const downtimeCost = annualRevenueVND * 0.005;
+    const reputationDamageCost = annualRevenueVND * 0.003;
+    const profitLossCost = annualRevenueVND * 0.05;
+
+    // Tính toán tổng thiệt hại không đầu tư
+    const totalDamageCost = incidentResponseCost + dataRecoveryCost + downtimeCost + reputationDamageCost + profitLossCost;
+
+    // Tính toán các chi phí có đầu tư (giảm theo mức độ đầu tư)
+    const incidentResponseCostInvested = incidentResponseCost * (1 - investmentLevel);
+    const dataRecoveryCostInvested = dataRecoveryCost * (1 - investmentLevel);
+    const downtimeCostInvested = downtimeCost * (1 - investmentLevel);
+    const reputationDamageCostInvested = reputationDamageCost * (1 - investmentLevel);
+    const profitLossCostInvested = profitLossCost * (1 - investmentLevel);
+
+    // Tính toán tổng thiệt hại có đầu tư
+    const totalDamageCostInvested = incidentResponseCostInvested + dataRecoveryCostInvested + downtimeCostInvested + reputationDamageCostInvested + profitLossCostInvested;
+
+    // Hiển thị kết quả trong bảng
+    $('#incidentResponseCost').text(incidentResponseCost.toLocaleString('vi-VN'));
+    $('#dataRecoveryCost').text(dataRecoveryCost.toLocaleString('vi-VN'));
+    $('#downtimeCost').text(downtimeCost.toLocaleString('vi-VN'));
+    $('#reputationDamageCost').text(reputationDamageCost.toLocaleString('vi-VN'));
+    $('#profitLossCost').text(profitLossCost.toLocaleString('vi-VN'));
+    $('#totalDamageCost').text(totalDamageCost.toLocaleString('vi-VN'));
+
+    $('#incidentResponseCostInvested').text(incidentResponseCostInvested.toLocaleString('vi-VN'));
+    $('#dataRecoveryCostInvested').text(dataRecoveryCostInvested.toLocaleString('vi-VN'));
+    $('#downtimeCostInvested').text(downtimeCostInvested.toLocaleString('vi-VN'));
+    $('#reputationDamageCostInvested').text(reputationDamageCostInvested.toLocaleString('vi-VN'));
+    $('#profitLossCostInvested').text(profitLossCostInvested.toLocaleString('vi-VN'));
+    $('#totalDamageCostInvested').text(totalDamageCostInvested.toLocaleString('vi-VN'));
+
+    // Hiển thị bảng kết quả
+    $('#resultsTable').show();
+}
+</script>
+</body>
+</html>
